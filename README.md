@@ -1,64 +1,36 @@
-ReSkinAI — All-in-One (Train → Infer → Grad-CAM → App)
+Absolutely ✅ — here’s your **ready-to-copy README.md** (you can directly paste this into your `README.md` file on GitHub or VS Code).
 
-AI demo that classifies basic skin conditions from a face photo: acne, dark_spot, redness, normal.
-Built with PyTorch EfficientNet-B3 and Grad-CAM. One file does it all: reskin_all_in_one.py.
+---
 
-⚠️ Disclaimer: This is an educational demo, not medical advice. Always consult a dermatologist for diagnosis/treatment.
+```markdown
+# 🧴 ReSkinAI — All-in-One (Train → Infer → Grad-CAM → App)
 
-✨ Features
+An AI demo that classifies basic skin conditions from a face photo: **acne**, **dark_spot**, **redness**, and **normal**.  
+Built using **PyTorch EfficientNet-B3** and **Grad-CAM** — all in a single file: `reskin_all_in_one.py`.
 
-Single script: organize dataset → train → predict → Grad-CAM → run Streamlit app.
+> ⚠️ **Disclaimer:** This is an educational demo and **not medical advice**.  
+> Always consult a certified dermatologist for any diagnosis or treatment.
 
-Flexible data intake:
+---
 
-From CSV + raw images (recursively found even if nested).
+## ✨ Features
 
-From an existing class-folder structure.
+- 🚀 **Single Python file** for full pipeline  
+  (Organize dataset → Train → Predict → Visualize → Run Streamlit app)
+- 📁 **Flexible dataset input**
+  - CSV + Raw images
+  - Folder with class subdirectories
+  - Pre-split train/val folders
+- ⚙️ **Auto train/val split** from unsplit datasets
+- 🔥 **Grad-CAM visualization** support
+- 🌐 **Streamlit web app** for interactive predictions
 
-From a ready train/val split.
 
-Auto train/val split if you supply only class folders.
 
-Grad-CAM heatmap to visualize what the model looked at.
+## 🧰 Setup
 
-Streamlit app for easy uploads and visualization.
-
-📁 Repo Structure (recommended)
-ReSkinAI/
-├─ reskin_all_in_one.py          # <— all-in-one pipeline
-├─ README.md
-├─ data/
-│  ├─ raw/                       # (optional) unzip all images here
-│  ├─ train/                     # auto-created if needed
-│  │  ├─ acne/ ...
-│  │  ├─ dark_spot/ ...
-│  │  ├─ redness/ ...
-│  │  └─ normal/ ...
-│  └─ val/
-│     ├─ acne/ ...
-│     ├─ dark_spot/ ...
-│     ├─ redness/ ...
-│     └─ normal/ ...
-├─ models/
-│  └─ efficientnet_b3_best.pt    # saved after training
-└─ skin_defects.csv              # (optional) file,label or image,class
-
-🧰 Requirements
-
-Python 3.10+
-
-PyTorch + TorchVision
-
-Pillow, NumPy, Pandas, TQDM, scikit-learn
-
-OpenCV
-
-Grad-CAM (for heatmaps)
-
-Streamlit (for the app)
-
-Install (Windows / macOS / Linux):
-
+### 1️⃣ Create Environment & Install Dependencies
+```bash
 python -m venv .venv
 # Windows
 .venv\Scripts\activate
@@ -66,143 +38,186 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install torch torchvision torchaudio Pillow numpy pandas tqdm scikit-learn opencv-python grad-cam streamlit
+````
 
-📦 Dataset Options
-Option A — CSV + raw images
+---
 
-Put all unzipped images anywhere under data/raw/ (nested is fine).
+## 📦 Dataset Options
 
-Provide a CSV with at least two columns (names are flexible):
+### Option A — CSV + Raw Images
 
-file or image → relative path or filename
+Put your unzipped images in `data/raw/` and create a CSV file like:
 
-label or class → one of:
-
-acne, dark_spot, redness, normal
-
-common variants like pimples, hyperpigmentation, rosacea, healthy are auto-mapped.
-
-Example CSV:
-
+```csv
 file,label
 person_001.jpg,acne
 folderA/img002.png,dark_spot
 photos/jane.png,redness
 abc/xyz.jpg,normal
+```
 
-Option B — Class-folder
+Supported variants like `pimples`, `blackspot`, `rosacea`, and `healthy` are automatically mapped to the correct class.
 
-Supply a folder that already has:
+### Option B — Class Folder Structure
 
-<your_folder>/
-  acne/ *.jpg|*.png...
-  dark_spot/ ...
-  redness/ ...
-  normal/ ...
+Organize your dataset as:
 
+```
+dataset/
+├─ acne/
+├─ dark_spot/
+├─ redness/
+└─ normal/
+```
 
-The script will auto-split into data/train and data/val.
+The script will automatically create `data/train` and `data/val` splits.
 
-Option C — Ready train/val
+### Option C — Ready Split (train/val)
 
-If you already have data/train/<class> and data/val/<class>, the script will just use them.
+If you already have `data/train` and `data/val` with class folders, you’re good to go!
 
-🚆 Train
+---
 
-Run all commands from the folder that contains reskin_all_in_one.py.
+## 🚆 Training
 
-A) CSV + raw images
+### A) CSV + Raw Images
+
+```bash
 python reskin_all_in_one.py train --data_dir data --csv "./skin_defects.csv" --raw_dir "./data/raw" --val_ratio 0.15 --epochs 10 --bs 16
+```
 
-B) Class-folder (auto-split)
-python reskin_all_in_one.py train --data_dir data --class_dir "D:/my_skin_classes" --val_ratio 0.15 --epochs 10 --bs 16
+### B) Class Folder (Auto-Split)
 
-C) Already have train/val
+```bash
+python reskin_all_in_one.py train --data_dir data --class_dir "./dataset" --val_ratio 0.15 --epochs 10 --bs 16
+```
+
+### C) Pre-Split (train/val exists)
+
+```bash
 python reskin_all_in_one.py train --data_dir data --epochs 10 --bs 16
+```
 
+✅ The best model will be saved automatically to:
 
-Outputs
+```
+models/efficientnet_b3_best.pt
+```
 
-Saves the best model to models/efficientnet_b3_best.pt
+---
 
-Prints a classification report at the end.
+## 🔎 Inference (Single Image Prediction)
 
-🔎 Inference (single image)
-python reskin_all_in_one.py infer --img "./some_face.jpg" --weights "./models/efficientnet_b3_best.pt"
+Use your trained model to predict on a single image:
 
+```bash
+python reskin_all_in_one.py infer --img "./sample.jpg" --weights "./models/efficientnet_b3_best.pt"
+```
 
 Example output:
 
+```
 Prediction: acne (0.87)
 - acne: 0.87
 - dark_spot: 0.05
 - redness: 0.06
 - normal: 0.02
+```
 
-🔥 Grad-CAM Heatmap
-python reskin_all_in_one.py cam --img "./some_face.jpg" --weights "./models/efficientnet_b3_best.pt" --out cam_overlay.jpg
+---
 
+## 🔥 Grad-CAM Visualization
 
-This writes cam_overlay.jpg with a heatmap overlay.
+Generate a heatmap showing where the model focused:
 
-🌐 Streamlit App
+```bash
+python reskin_all_in_one.py cam --img "./sample.jpg" --weights "./models/efficientnet_b3_best.pt" --out cam_overlay.jpg
+```
+
+Output:
+✅ `cam_overlay.jpg` — input image + attention heatmap overlay.
+
+---
+
+## 🌐 Streamlit Web App
+
+Launch the ReSkinAI app in your browser:
+
+```bash
 streamlit run reskin_all_in_one.py -- app --weights "./models/efficientnet_b3_best.pt"
+```
+
+**Features:**
+
+* Upload any face photo
+* Get prediction + probability for each class
+* Visual Grad-CAM attention heatmap
+
+---
+
+## ⚙️ Model Details
+
+| Parameter     | Value             |
+| ------------- | ----------------- |
+| Architecture  | EfficientNet-B3   |
+| Input size    | 300×300           |
+| Loss          | CrossEntropyLoss  |
+| Optimizer     | AdamW             |
+| Learning rate | 3e-4              |
+| Batch size    | 16                |
+| Epochs        | 10 (configurable) |
+
+---
+
+## 🧪 Quick Sanity Checklist
+
+✅ `data/train` and `data/val` exist
+✅ Each class folder contains valid `.jpg`, `.png`, or `.webp` files
+✅ You’re running the script **from the same directory** as `reskin_all_in_one.py`
+✅ For Windows paths with spaces (e.g., OneDrive), always use quotes: `"path with spaces"`
+
+---
+
+## 🩹 Common Errors & Fixes
+
+| Error                                 | Cause                           | Fix                                                   |
+| ------------------------------------- | ------------------------------- | ----------------------------------------------------- |
+| `Found no valid file for the classes` | Empty or wrong folder structure | Ensure images are inside correct class folders        |
+| `FileNotFoundError: skin_defects.csv` | Wrong CSV path                  | Use full path, e.g. `"C:/Users/.../skin_defects.csv"` |
+| `relative import`                     | Not applicable now              | This version uses absolute imports only               |
+| `DataLoader hang` on Windows          | Worker issue                    | Change `num_workers=0` in DataLoader                  |
+
+---
+
+## 🧠 Example Commands Recap
+
+```bash
+# train (csv)
+python reskin_all_in_one.py train --data_dir data --csv "./skin_defects.csv" --raw_dir "./data/raw"
+
+# predict
+python reskin_all_in_one.py infer --img "./front.jpg" --weights "./models/efficientnet_b3_best.pt"
+
+# gradcam
+python reskin_all_in_one.py cam --img "./front.jpg" --weights "./models/efficientnet_b3_best.pt"
+
+# run app
+streamlit run reskin_all_in_one.py -- app --weights "./models/efficientnet_b3_best.pt"
+```
+
+---
+
+## 🧴 Tech Stack
+
+* **Language:** Python 3.10+
+* **Frameworks:** PyTorch, TorchVision
+* **Visualization:** Grad-CAM, Streamlit
+* **Libraries:** NumPy, Pandas, scikit-learn, OpenCV, TQDM
+
+---
+
+## 📄 License
+
+MIT License © 2025
 
 
-Upload a face photo
-
-See prediction + probabilities + Grad-CAM heatmap (requires grad-cam installed)
-
-⚙️ Training/Model Details
-
-Backbone: EfficientNet-B3 (torchvision)
-
-Image size: 300×300
-
-Augmentations: resize, horizontal flip, color jitter
-
-Optimizer: AdamW (lr=3e-4)
-
-Loss: CrossEntropy
-
-Best-val checkpoint saved automatically
-
-🧪 Quick Sanity Checklist
-
-Do you see non-zero image counts in each class for both train/ and val/?
-
-Are image files actually inside the class folders (not empty)?
-
-On Windows paths with spaces (OneDrive), always wrap paths in quotes "...".
-
-🩹 Troubleshooting
-
-Found no valid file for the classes ...
-→ Your folders are empty or images aren’t in supported formats. Confirm with:
-
-# Windows
-tree /F data
-# macOS/Linux
-find data -maxdepth 3 -type f | wc -l
-
-
-FileNotFoundError: skin_defects.csv
-→ CSV isn’t in the current directory. Run dir/ls to verify or pass a full path.
-
-Relative import / module errors
-→ Not applicable here (single file). If you split files, run as a module:
-python -m src.train and ensure src/__init__.py exists.
-
-num_workers issues on Windows
-→ If DataLoader hangs, change num_workers=0 in the code.
-
-Slow training on CPU
-→ Works, just slower. For GPU, install the CUDA-enabled PyTorch build.
-
-📄 License
-
-MIT (or your choice). Add a license file if you plan to share/distribute.
-
-🙌 Credits
-
-Built with PyTorch, TorchVision, Grad-CAM, and Streamlit. Inspired by dermatology computer-vision demos.
