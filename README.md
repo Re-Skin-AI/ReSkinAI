@@ -55,10 +55,19 @@ your_dataset/
 
 `src/train.py` uses `validation_split` to create train/validation sets at runtime.
 
-## 3) Setup (Linux/macOS)
+## 3) Setup (Linux/macOS / Codespaces)
 
 ```bash
-cd /path/to/ReSkinAI
+# IMPORTANT: run from repository root (where README.md and requirements.txt exist)
+pwd
+ls
+
+# If you are in GitHub Codespaces, this is usually:
+cd /workspaces/ReSkinAI
+
+# Generic alternative:
+# cd /path/to/ReSkinAI
+
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
@@ -86,7 +95,8 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ### Linux/macOS
 
 ```bash
-python -m src.train --data_dir /path/to/your_dataset --epochs 20
+# Run this from repo root, not from inside your_dataset/
+python -m src.train --data_dir ./your_dataset --epochs 20
 ```
 
 ### Windows PowerShell
@@ -136,13 +146,29 @@ Response JSON:
 streamlit run src/ui/app.py
 ```
 
+If your API runs elsewhere, set `api_url` in Streamlit secrets:
+
+```toml
+# .streamlit/secrets.toml
+api_url = "https://your-api-domain/predict"
+```
+
 Features:
 - Upload image
 - Camera capture
 - Prediction and confidence display
 - Grad-CAM heatmap visualization
 
-## 8) Troubleshooting (Windows)
+## 8) Troubleshooting
+
+### Linux/macOS / Codespaces
+
+- **`cd /workspace/ReSkinAI: No such file or directory`**: use `/workspaces/ReSkinAI` in Codespaces (note the trailing `s`), or `pwd`/`ls` to find your actual repo path.
+- **`ERROR: Could not open requirements file ... requirements.txt`**: you are not in repo root. Run `cd /workspaces/ReSkinAI` (or your repo root), then `ls` and confirm `requirements.txt` is present.
+- **`ModuleNotFoundError: No module named 'src'`**: you ran training from the wrong directory (e.g., inside `your_dataset/`). Go back to repo root and run: `python -m src.train --data_dir ./your_dataset --epochs 20`.
+- **`your_dataset/` tree text fails with `command not found`**: that block is documentation, not a command. Create folders using: `mkdir -p your_dataset/{acne,eczema,melanoma,psoriasis}`.
+
+### Windows PowerShell
 
 - **`cd /workspace/ReSkinAI` fails**: that path is Linux-only. Use your real Windows path, e.g. `cd C:\Users\lenovo\Desktop\ReSkinAI`.
 - **`source` not recognized**: `source` is bash syntax. In PowerShell use `\.venv\Scripts\Activate.ps1`.
